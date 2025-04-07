@@ -1,0 +1,26 @@
+name: Deploy Check
+
+on:
+  pull_request:
+    types: [opened, synchronize, reopened]
+  workflow_dispatch:  # Enables manual triggering
+
+jobs:
+  deploy:
+    runs-on: ubuntu-latest
+    permissions:
+      pull-requests: write  # Needed for status checks
+      contents: read
+
+    steps:
+      - uses: actions/checkout@v3
+
+      - name: Run deploy script
+        run: |
+          chmod +x ./deploy.sh
+          ./deploy.sh
+
+      - name: Update Check Status
+        if: success()
+        run: |
+          echo "Deploy check passed"

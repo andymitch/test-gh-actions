@@ -1,0 +1,21 @@
+name: PR Comment
+
+on:
+  pull_request_target:
+    types: [opened]
+
+jobs:
+  comment:
+    runs-on: ubuntu-latest
+    permissions:
+      pull-requests: write
+    steps:
+      - uses: actions/github-script@v6
+        with:
+          script: |
+            github.rest.issues.createComment({
+              issue_number: context.issue.number,
+              owner: context.repo.owner,
+              repo: context.repo.repo,
+              body: '👋 You can trigger the deploy check manually by clicking [here](https://github.com/${{ github.repository }}/actions/workflows/deploy-check.yml?query=event%3Aworkflow_dispatch)'
+            })
